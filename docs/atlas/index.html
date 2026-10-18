@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f1e7">
+  <meta name="description" content="Explore the birthplaces of 34 divine figures through ancient texts, island stories, and rival local traditions. An interactive atlas of myth, not history.">
+  <title>Where were the gods born? — Mythos Atlas</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='32' fill='%232b443d'/%3E%3Cpath d='M35 8 17 36h14l-3 20 20-30H34z' fill='%23e5be60'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script src="vendor/d3.min.js" defer></script>
+  <script src="data/gods.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#explore">Skip to the atlas</a>
+  <header class="masthead">
+    <a class="brand" href="./" aria-label="Mythos Atlas home"><span class="brand-mark" aria-hidden="true">Μ</span><span>MYTHOS <b>ATLAS</b></span></a>
+    <span class="edition">A GEOGRAPHY OF GREEK MYTH</span>
+    <nav class="atlas-links" aria-label="Poster and sources"><a href="../">Poster</a><a href="../greek-gods-birthplaces.png" download>PNG ↓</a><button class="text-button" id="sources-open">About &amp; sources <span aria-hidden="true">↗</span></button></nav>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="title">
+      <div><p class="eyebrow"><span></span> THE GREEK WORLD · ATLAS No. 01</p><h1 id="title">Where were<br>the gods <em>born?</em></h1></div>
+      <div class="intro-note"><p>Before Olympus, <br>there was a beginning.</p><div>Trace divine origins across islands, mountains, and seas. Follow the ancient stories—and the places that claimed them.</div></div>
+    </section>
+    <section class="atlas" id="explore" aria-label="Interactive birthplace atlas">
+      <div class="atlas-toolbar">
+        <div class="filters" role="group" aria-label="Filter gods"><button class="filter active" data-filter="all" aria-pressed="true">All stories <span>25</span></button><button class="filter" data-filter="mapped" aria-pressed="false">On the map <span>18</span></button><button class="filter" data-filter="unplaced" aria-pressed="false">Unlocated <span>7</span></button></div>
+        <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg><input id="search" type="search" placeholder="Find a god or place…" aria-label="Find a god or place"></label>
+      </div>
+      <div class="atlas-body">
+        <div class="map-column">
+          <div class="map-top"><span><i class="live-dot"></i> EXPLORE THE ORIGINS</span><label class="switch"><input type="checkbox" id="variants"><span class="switch-track"></span>Rival claims &amp; routes</label></div>
+          <div class="map-wrap" id="map-wrap">
+            <svg id="map" viewBox="0 0 940 600" role="group" aria-label="Map of Greek divine origins in Greece and the eastern Mediterranean"><title>Greek divine origins</title><desc>Select a named marker to read its tradition. Use the zoom buttons and drag to explore. The god selector below offers the same information.</desc></svg>
+            <div class="map-loading" id="map-loading">Drawing the Greek world…</div>
+            <div class="map-controls" role="group" aria-label="Map controls"><button id="zoom-in" aria-label="Zoom in">+</button><button id="zoom-out" aria-label="Zoom out">−</button><button id="reset-map" aria-label="Reset map view">⌂</button></div>
+            <div class="map-hint">SELECT A PLACE TO OPEN ITS STORY</div>
+          </div>
+          <div class="map-key"><span><i class="key-birth"></i>Birth tradition</span><span><i class="key-variant"></i>Rival claim</span><span><i class="key-arrival"></i>Arrival / infancy</span><span class="key-note">Approximate locations · Myth, not history</span></div>
+          <div class="tour-bar"><div><span class="tour-number" id="tour-number">01 / 08</span><strong id="tour-title">An island hides a future king.</strong></div><button id="tour-next">Follow the stories <span aria-hidden="true">→</span></button></div>
+        </div>
+        <aside class="story-panel" aria-label="Selected god" id="story-panel"><div id="story" aria-live="polite" aria-atomic="true"></div><div class="story-navigation"><button id="previous-god" aria-label="Previous god">←</button><span id="god-index">01 / 15</span><button id="next-god" aria-label="Next god">→</button></div></aside>
+      </div>
+      <div class="god-browser"><div class="browser-heading"><span>CHOOSE A GOD OR GROUP</span><span id="result-count" role="status">15 stories to explore</span></div><div id="god-list" class="god-list" aria-label="Greek gods"></div><p id="empty-results" hidden>No gods or places match. Try “Delos”, “sea”, or “Zeus”.</p></div>
+    </section>
+    <section class="reading-note"><span class="note-symbol" aria-hidden="true">✳</span><div><h2>One god. More than one beginning.</h2><p>Greek myths were never a single, fixed story. Poets and cities preserved different versions. A dot here marks a tradition in a named source—not archaeological evidence of a divine birth.</p></div><button class="text-button" id="method-open">How to read this map <span aria-hidden="true">↗</span></button></section>
+  </main>
+  <footer><span>MYTHOS ATLAS <span class="footer-divider">/</span> A small journey into the ancient imagination.</span><span>Ancient texts via Theoi · Geography by Natural Earth</span></footer>
+  <dialog id="sources-dialog" aria-labelledby="sources-title"><div class="dialog-head"><p class="eyebrow">THE ATLAS NOTEBOOK</p><button id="sources-close" aria-label="Close sources">×</button></div><h2 id="sources-title">Stories, sources<br>&amp; a little uncertainty.</h2><p>This atlas follows 34 divine figures across 25 story entries. The nine Muses and the Dioscuri are grouped; Heracles is included as a deified hero. Eighteen entries have a mapped birth, regional, arrival, or infancy tradition here; seven have no securely mapped location in the selected accounts. It is a curated introduction, not a complete catalogue of every ancient claim.</p><h3>Reading the marks</h3><p>Solid gold circles mark a birth tradition. Rust-colored rings mark a rival local claim. Diamonds mark a landing or a place where an infant was hidden. Pan’s Arcadian marker is regional. Coordinates are approximate modern aids to reading; they are not surveyed ancient birth sites.</p><p>The main view shows one selected tradition for each mapped god. Switch on “Rival claims &amp; routes” to see additional mapped traditions and Aphrodite’s sea journey. A dashed line is a schematic narrative link, not an ancient travel route. “Unlocated” means the cited account supplies no fixed place; it does not mean no other tradition exists.</p><h3>Ancient texts</h3><div id="source-list"></div><h3>The map</h3><p>Coastlines: <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener noreferrer">Natural Earth</a>, 1:50m public-domain land data. Tiny islands may be smaller than their markers. Modern coastlines are used for orientation; modern state borders are omitted. Typeface: Gentium Plus, SIL Open Font License. Mapping: D3, ISC license.</p><p class="dialog-end">Each god’s story links directly to its cited text or an explicitly identified ancient passage preserved in Theoi’s source collections.</p></dialog>
+</body>
+</html>
