@@ -79,7 +79,7 @@ async function initMap(){
   if(!window.d3)throw new Error('The map library could not load.');
   svg=d3.select('#map');
   projection=d3.geoMercator().center([26.2,36.7]).scale(2850).translate([W/2,H/2]).clipExtent([[0,0],[W,H]]);
-  const land=await d3.json('data/land.geojson');
+  const land=await d3.json('data/land-full.geojson');
   svg.append('defs').append('clipPath').attr('id','map-clip').append('rect').attr('width',W).attr('height',H);
   world=svg.append('g').attr('clip-path','url(#map-clip)').append('g');
   const path=d3.geoPath(projection);
@@ -93,7 +93,7 @@ async function initMap(){
   routeLayer=world.append('g');markerLayer=world.append('g');
   const compass=svg.append('g').attr('transform','translate(877,56)').attr('aria-hidden','true');
   compass.append('path').attr('class','compass').attr('d','M0,-19 4,0 0,17 -4,0Z M-13,0H13');compass.append('path').attr('d','M0,-19 4,0H0Z').attr('fill','#7e947f');compass.append('text').attr('class','compass-letter').attr('x',-4).attr('y',-28).text('N');
-  svg.append('text').attr('class','svg-caption').attr('x',W-22).attr('y',H-15).attr('text-anchor','end').text('NATURAL EARTH · MODERN COASTLINES');
+  svg.append('text').attr('class','svg-caption').attr('x',W-22).attr('y',H-15).attr('text-anchor','end').text('GSHHG · FULL-RESOLUTION COASTLINES');
   zoom=d3.zoom().extent([[0,0],[W,H]]).scaleExtent([1,5]).translateExtent([[-W*.2,-H*.2],[W*1.2,H*1.2]]).filter(e=>(!e.ctrlKey||e.type==='wheel')&&!e.button&&(e.type!=='wheel'||e.ctrlKey)).on('zoom',e=>{world.attr('transform',e.transform);});
   svg.call(zoom).on('dblclick.zoom',null);
   $('#zoom-in').addEventListener('click',()=>svg.transition().duration(reduceMotion?0:250).call(zoom.scaleBy,1.5));

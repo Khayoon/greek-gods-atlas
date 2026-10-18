@@ -1,0 +1,7 @@
+GSHHG 2.3.7 — Paul Wessel and Walter H. F. Smith
+https://www.soest.hawaii.edu/wessel/gshhg/
+Original archive: https://www.soest.hawaii.edu/pwessel/gshhg/gshhg-bin-2.3.7.zip
+Full resolution, level 1 land polygons. WGS84 geographic coordinates.
+Regional extraction: 17–37 E, 30–44 N. Rectangular clipping only; no coastal vertex simplification.
+209,652 original coastal vertices in the extract; 3,088 land polygons.
+License: GNU Lesser General Public License v3 or any earlier version.
