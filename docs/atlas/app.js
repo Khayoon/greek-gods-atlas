@@ -72,14 +72,14 @@ dialog.addEventListener('click',e=>{const r=dialog.getBoundingClientRect();if(e.
 window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(gods.some(g=>g.id===id)){filter='all';query='';$('#search').value='';selectGod(id,{updateHash:false});applyFilter();}});
 
 const W=940,H=600;
-let svg,world,markerLayer,routeLayer,projection,zoom;
+let svg,world,markerLayer,routeLayer,projection,zoom,tritonisInset;
 function resetMap(){svg.transition().duration(reduceMotion?0:350).call(zoom.transform,d3.zoomIdentity);}
 async function initMap(){
  try{
   if(!window.d3)throw new Error('The map library could not load.');
   svg=d3.select('#map');
   projection=d3.geoMercator().center([26.2,36.7]).scale(2850).translate([W/2,H/2]).clipExtent([[0,0],[W,H]]);
-  const land=await d3.json('data/land-full.geojson');
+  const [land,tritonisLand]=await Promise.all([d3.json('data/land-full.geojson'),d3.json('data/land-tritonis.geojson')]);
   svg.append('defs').append('clipPath').attr('id','map-clip').append('rect').attr('width',W).attr('height',H);
   world=svg.append('g').attr('clip-path','url(#map-clip)').append('g');
   const path=d3.geoPath(projection);
@@ -94,6 +94,14 @@ async function initMap(){
   const compass=svg.append('g').attr('transform','translate(877,56)').attr('aria-hidden','true');
   compass.append('path').attr('class','compass').attr('d','M0,-19 4,0 0,17 -4,0Z M-13,0H13');compass.append('path').attr('d','M0,-19 4,0H0Z').attr('fill','#7e947f');compass.append('text').attr('class','compass-letter').attr('x',-4).attr('y',-28).text('N');
   svg.append('text').attr('class','svg-caption').attr('x',W-22).attr('y',H-15).attr('text-anchor','end').text('GSHHG · FULL-RESOLUTION COASTLINES');
+  // Context only: no asserted coordinate or lake outline for Lake Tritonis.
+  tritonisInset=svg.append('g').attr('transform','translate(24,400)').attr('display','none').attr('aria-label','Athena at Lake Tritonis, ancient North Africa; exact lake site uncertain');
+  tritonisInset.append('rect').attr('width',242).attr('height',158).attr('fill','#f5f0e4').attr('stroke','#b5b9a8');
+  tritonisInset.append('text').attr('x',12).attr('y',23).attr('fill','#263d33').attr('font-size',12).attr('font-weight',700).text('ATHENA · LAKE TRITONIS');
+  const insetProjection=d3.geoMercator().center([16,35]).scale(560).translate([121,88]).clipExtent([[8,35],[234,131]]);
+  tritonisInset.append('path').datum(tritonisLand).attr('d',d3.geoPath(insetProjection)).attr('fill','#e9e4d5').attr('stroke','#68715e').attr('stroke-width',.65);
+  tritonisInset.append('text').attr('x',121).attr('y',122).attr('text-anchor','middle').attr('fill','#6d7566').attr('font-size',9).text('NORTH AFRICA');
+  tritonisInset.append('text').attr('x',12).attr('y',147).attr('fill','#6d7566').attr('font-size',10).text('Ancient Libya · lake location uncertain');
   zoom=d3.zoom().extent([[0,0],[W,H]]).scaleExtent([1,5]).translateExtent([[-W*.2,-H*.2],[W*1.2,H*1.2]]).filter(e=>(!e.ctrlKey||e.type==='wheel')&&!e.button&&(e.type!=='wheel'||e.ctrlKey)).on('zoom',e=>{world.attr('transform',e.transform);});
   svg.call(zoom).on('dblclick.zoom',null);
   $('#zoom-in').addEventListener('click',()=>svg.transition().duration(reduceMotion?0:250).call(zoom.scaleBy,1.5));
@@ -109,7 +117,8 @@ async function initMap(){
 function renderMarkers(){
  const allSites=new Map();
  const filtered=visibleGods();
- filtered.forEach(g=>g.sites.filter(s=>!s.alt||showVariants).forEach(s=>{
+ tritonisInset.attr('display',showVariants&&selected==='athena'&&filtered.some(g=>g.id==='athena')?null:'none');
+ filtered.forEach(g=>g.sites.filter(s=>!s.inset&&(!s.alt||showVariants)).forEach(s=>{
   if(!allSites.has(s.key))allSites.set(s.key,{...s,gods:[]});allSites.get(s.key).gods.push(g.id);
  }));
  routeLayer.selectAll('*').remove();

@@ -4,4 +4,7 @@ Original archive: https://www.soest.hawaii.edu/pwessel/gshhg/gshhg-bin-2.3.7.zip
 Full resolution, level 1 land polygons. WGS84 geographic coordinates.
 Regional extraction: 17–37 E, 30–44 N. Rectangular clipping only; no coastal vertex simplification.
 209,652 original coastal vertices in the extract; 3,088 land polygons.
+North African context inset (land-tritonis.geojson): 3–29 E, 28–42 N.
+211,275 original coastal vertices; 2,892 land polygons. No vertex simplification.
+The inset supplies modern coastal context only; it does not assert a Lake Tritonis site.
 License: GNU Lesser General Public License v3 or any earlier version.

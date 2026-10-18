@@ -54,3 +54,23 @@ window.ATLAS_GODS.push(
  {id:'persephone',name:'Persephone',greek:'Περσεφόνη',domain:'Queen of the underworld & Demeter’s daughter',symbol:'vine',place:'No fixed place in this account',region:'Not plotted',badge:'Location unspecified',mapped:false,summary:'Hesiod names Persephone as the daughter of Zeus and Demeter, without supplying a birthplace in this passage.',noteTitle:'A later story is not a birth site',note:'Locations associated with her abduction or worship are not automatically evidence for where she was born. This entry keeps her origin unplotted.',sources:[['hes','Theogony 912–914']],sites:[]}
 );
 window.ATLAS_GODS.find(g=>g.id==='dionysus').sites[0].label='Dionysus & Heracles';
+
+// Additional regional traditions: distinguish rearing from an explicit birth,
+// and keep the disputed North African lake unpinned.
+Object.assign(window.ATLAS_SOURCES,{
+ paus4b:{label:'Pausanias · Messenian Zeus, 4.33.1–2',url:'https://www.theoi.com/Text/Pausanias4B.html'},
+ paus1a:{label:'Pausanias · Athena and Lake Tritonis, 1.14.6',url:'https://www.theoi.com/Text/Pausanias1A.html'},
+ paus9b:{label:'Pausanias · Rival Triton rearing traditions, 9.33.7',url:'https://www.theoi.com/Text/Pausanias9B.html'},
+ nonnus13:{label:'Nonnus · Dionysiaca 13, Rouse’s note 50 on Tritogeneia',url:'https://www.theoi.com/Text/NonnusDionysiaca13.html'},
+ tritonisGeography:{label:'Jean Peyras & Pol Trousset · Lake Tritonis and its disputed ancient geography (1988)',url:'https://www.persee.fr/doc/antaf_0066-4871_1988_num_24_1_1150'}
+});
+const zeusEntry=window.ATLAS_GODS.find(g=>g.id==='zeus');
+zeusEntry.noteTitle='Birth claims and an infancy tradition';
+zeusEntry.note='Pausanias records a rival birth claim on Mount Lycaeus in Arcadia. At Ithome in Messenia, he reports that Ithome and Neda nursed Zeus and bathed him at the Klepsydra spring. His Messenian passage explicitly describes upbringing, so that site uses the infancy diamond. Turn on rival claims to compare these traditions.';
+zeusEntry.sources.push(['paus4b','Description of Greece 4.33.1–2']);
+zeusEntry.sites.push({key:'ithome',label:'Zeus',place:'Ithome · Messenian infancy',coords:[21.925,37.178],type:'infancy',alt:true,dx:-65,dy:96});
+const athenaEntry=window.ATLAS_GODS.find(g=>g.id==='athena');
+athenaEntry.noteTitle='Lake Tritonis: a North African tradition';
+athenaEntry.note='A separate Libyan tradition connects Athena’s origins and rearing with Lake Tritonis. Pausanias 1.14.6 calls her the daughter of Poseidon and the lake; 9.33.7 contrasts Libyan and Boeotian rearing traditions. The epithet Tritogeneia is traditionally connected with Triton waters, as Rouse explains in his note to Nonnus; this is one interpretation, not a settled etymology. Ancient Libya means North Africa here. The lake’s location is disputed, so the inset shows coastal context without a precise pin. Turn on rival claims to view it.';
+athenaEntry.sources.push(['paus1a','Description of Greece 1.14.6'],['paus9b','Description of Greece 9.33.7'],['nonnus13','Dionysiaca 13 · translator’s note 50'],['tritonisGeography','Lake Tritonis · geographic uncertainty']);
+athenaEntry.sites.push({key:'tritonis',label:'Athena',place:'Lake Tritonis · ancient Libya, site uncertain',type:'regional',alt:true,inset:true});

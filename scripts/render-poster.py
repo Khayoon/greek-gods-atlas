@@ -47,6 +47,33 @@ text(150,330,'the gods born?',228,'bold')
 text(166,610,'Birthplaces and divine beginnings,',55,'serif')
 text(166,678,'as told by ancient poets and local traditions.',55,'serif')
 
+# Lake Tritonis belongs to ancient North African geography. Its identification
+# varies between accounts: show coastal context, without inventing a lake pin.
+text(2180,100,'Athena',74,'bold')
+text(2420,112,'18',25,'sansbold',RUST)
+text(2180,195,'Lake Tritonis · ancient Libya',42,'sansbold')
+inset_box=(2180,272,3050,600)
+inset_scale=2000
+def inset_project(lon,lat):
+    my=lambda a:math.log(math.tan(math.pi/4+math.radians(a)/2))
+    return 2615+inset_scale*math.radians(lon-16),436+inset_scale*(my(35)-my(lat))
+inset=Image.new('RGB',(W*S,H*S),PAPER); nd=ImageDraw.Draw(inset)
+context=json.loads((OUT/'atlas/data/land-tritonis.geojson').read_text('utf-8'))
+for feature in context['features']:
+    ring=feature['geometry']['coordinates'][0]
+    pts=[tuple(round(z*S) for z in inset_project(lon,lat)) for lon,lat in ring]
+    nd.polygon(pts,fill=LAND)
+    nd.line(pts,fill=COAST,width=round(1.5*S),joint='curve')
+im.paste(inset.crop(tuple(round(a*S) for a in inset_box)),(round(inset_box[0]*S),round(inset_box[1]*S)))
+del inset,nd,context
+d=ImageDraw.Draw(im)
+rect(inset_box,None,'#b5b9a8',1.5)
+text(2615,335,'Mediterranean Sea',32,'serif',MUTED,anchor='mm')
+text(2615,563,'N O R T H   A F R I C A',25,'sans',MUTED,anchor='mm')
+text(2180,620,'Birth & rearing tradition; lake site uncertain.',30,'sans',MUTED)
+text(2180,669,'Tritogeneia: one traditional explanation',30,'sans',MUTED)
+text(2180,711,'links her epithet to the Triton waters.',30,'sans',MUTED)
+
 # Mercator projection; actual coastlines, no modern political borders.
 SCALE=10500
 X0,Y0=120,815
@@ -146,7 +173,7 @@ def label(x,y,name,place,note=None,ref='',width=650,size=67,align='left'):
 # Callout lines are drawn first. Markers and labels are added above them.
 sites={
  'muses':(22.42,40.20),'thebes':(23.318,38.322),'hermes':(22.396,38.026),
- 'pan':(22.15,37.81),'athena':(21.90,37.52),'lycaeus':(21.98,37.46),
+ 'pan':(22.15,37.81),'athena':(21.90,37.52),'lycaeus':(21.98,37.46),'ithome':(21.925,37.178),
  'poseidon':(22.40,37.62),'asclepius':(23.07,37.61),'dioscuri':(22.13,36.79),
  'delos':(25.269,37.392),'samos':(26.885,37.673),'ortygia':(27.34,37.95),
  'zeus':(25.49,35.16),'eileithyia':(25.225,35.328),'aphrodite':(32.414,34.755),
@@ -156,7 +183,7 @@ def p(key):return project(*sites[key])
 leaders=[
  ('muses',(930,1060)),('thebes',(1230,1400)),('hermes',(620,1530)),
  ('pan',(650,1770)),('athena',(650,1985)),('lycaeus',(700,2200)),
- ('dioscuri',(730,2500)),('poseidon',(1100,2245)),('asclepius',(1330,1700)),
+ ('ithome',(780,2350)),('dioscuri',(730,2650)),('poseidon',(1100,2245)),('asclepius',(1330,1700)),
  ('delos',(1660,2110)),('samos',(1940,1860)),('ortygia',(2180,1575)),
  ('zeus',(1680,2670)),('eileithyia',(1330,2920)),('aphrodite',(2440,2800)),
  ('aristaeus',(700,3270))
@@ -170,7 +197,8 @@ label(150,1400,'Hermes','Mount Cyllene, Arcadia','Born in a mountain cave',ref='
 label(150,1630,'Pan','Arcadia, near Cyllene','A regional mountain tradition',ref='7',width=455,size=68)
 label(150,1860,'Athena','Aliphera, Arcadia','Local claim to her head-birth',ref='6',width=475,size=68)
 label(150,2100,'Zeus — rival claim','Mount Lycaeus, Arcadia',ref='1',width=550,size=59)
-label(150,2370,'Castor & Polydeuces','Pephnos, off the Mani coast','The divine twins, or Dioscuri',ref='13',width=660,size=62)
+label(150,2270,'Zeus — infancy','Ithome, Messenia','Nursed by Ithome and Neda;\nbathed at Klepsydra spring',ref='17',width=660,size=59)
+label(150,2540,'Castor & Polydeuces','Pephnos, off the Mani coast','The divine twins, or Dioscuri',ref='13',width=660,size=62)
 label(1100,2205,'Poseidon','Near Mantineia, Arcadia','Hidden here after birth',ref='8',width=690,size=66)
 label(1330,1580,'Asclepius','Epidaurian territory','Apollo’s son, god of healing',ref='11',width=700,size=68)
 label(1700,2015,'Apollo & Artemis','Delos','Both born here in Apollodorus',ref='4',width=910,size=68)
@@ -185,7 +213,7 @@ label(150,3180,'Aristaeus','Libya, near Cyrene','Divine patron of rural crafts',
 for key in ['thebes','hermes','athena','asclepius','dioscuri','delos','samos','zeus','eileithyia']:
     marker(*sites[key])
 for key in ['lycaeus','ortygia']:marker(*sites[key],'rival')
-for key in ['poseidon','aphrodite']:marker(*sites[key],'related')
+for key in ['poseidon','aphrodite','ithome']:marker(*sites[key],'related')
 for key in ['pan','aristaeus','muses']:marker(*sites[key],'regional')
 
 # Specific ancient Cretan names without invented modern town coordinates.
@@ -218,11 +246,13 @@ sourcecols=[
  ['1  Apollodorus 1.1.6–7; Paus. 8.36.3',
   '2  Pausanias 7.4.4',
   '3  Homeric Hymn 4.1–29',
-  '4  Apollodorus 1.4.1; Strabo 14.1.20'],
+  '4  Apollodorus 1.4.1; Strabo 14.1.20',
+  '17  Pausanias 4.33.1–2'],
  ['5  Bacchae 1–12; Homeric Hymn 15.1–9',
   '6  Pausanias 8.26.6',
   '7  Homeric Hymn 19.27–47',
-  '8  Pausanias 8.8.1–4'],
+  '8  Pausanias 8.8.1–4',
+  '18  Paus. 1.14.6; 9.33.7; Nonnus 13 n.50'],
  ['9  Theogony 188–206; Nonnus 13.435 ff.',
   '10  Hesiod, Theogony 53–79',
   '11  Pausanias 2.26.3–5',
@@ -233,8 +263,8 @@ sourcecols=[
   '16  Diodorus 4.81.1–3']
 ]
 for col,rows in enumerate(sourcecols):
-    for i,row in enumerate(rows):text(165+col*750,3735+i*34,row,24,'sans',MUTED)
-text(165,3900,'Texts: Theoi.com & LacusCurtius · Shorelines: GSHHG 2.3.7, full resolution (Wessel & Smith).',25,'sans',MUTED)
+    for i,row in enumerate(rows):text(165+col*750,3730+i*32,row,24,'sans',MUTED)
+text(165,3920,'Texts: Theoi.com & LacusCurtius · Shorelines: GSHHG 2.3.7, full resolution (Wessel & Smith).',25,'sans',MUTED)
 
 # Source-provenance sidecar stays in work; the requested deliverable is just the PNG.
 im=im.resize((W,H),Image.Resampling.LANCZOS)
